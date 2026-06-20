@@ -1,0 +1,10 @@
+{
+  "lastId": 1,
+  "projects": [
+    {
+      "idProject": 0,
+      "projectName": "Diseño Base de Datos Mattel",
+      "projectDescription": "Modelado relacional y optimización de consultas para el sistema de subastas."
+    }
+  ]
+}
