@@ -1,10 +1,20 @@
 {
-  "lastId": 1,
+  "lastId": 4,
   "projects": [
     {
       "idProject": 0,
       "projectName": "Diseño Base de Datos Mattel",
       "projectDescription": "Modelado relacional y optimización de consultas para el sistema de subastas."
+    },
+    {
+      "idProject": 2,
+      "projectName": "Proyecto de OS",
+      "projectDescription": "Configurar Servidor UBUNTU"
+    },
+    {
+      "idProject": 3,
+      "projectName": "Taller de Topicos #3",
+      "projectDescription": "Implementar un sistema de gestión de tareas para proyectos de desarrollo de software."
     }
   ]
 }

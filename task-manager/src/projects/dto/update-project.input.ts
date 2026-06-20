@@ -4,11 +4,11 @@ import { InputType, Field, Int, PartialType, ID } from '@nestjs/graphql';
 @InputType()
 export class UpdateProjectInput extends PartialType(CreateProjectInput) {
   @Field(() => ID)
-  idProject: number = 0;
+  idProject!: number;
 
   @Field(() => String)
-  projectName: string = '';
+  projectName!: string;
 
   @Field(() => String)
-  projectDescription: string = '';
+  projectDescription!: string;
 }

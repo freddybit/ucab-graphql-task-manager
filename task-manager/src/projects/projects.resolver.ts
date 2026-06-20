@@ -32,14 +32,13 @@ export class ProjectsResolver {
     return this.projectsService.createProject(input);
   }
 
-  @Mutation(() => String)
+  @Mutation(() => Project)
   updateProject(@Args('updateProjectInput') input: UpdateProjectInput) {
     return this.projectsService.updateProject(input);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Project)
   removeProject(@Args('id', { type: () => Int }) id: number) {
-    this.projectsService.removeProjectById(id);
-    return true;
+    return this.projectsService.removeProjectById(id);
   }
 }
