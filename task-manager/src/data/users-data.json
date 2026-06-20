@@ -1,0 +1,32 @@
+{
+  "lastId": 6,
+  "users": [
+    {
+      "idUser": 0,
+      "name": "Freddy",
+      "lastName": "Fernández",
+      "email": "fafernandez.24@est.ucab.edu.ve",
+      "phone": "+584241540989"
+    },
+    {
+      "idUser": 2,
+      "name": "María",
+      "lastName": "García",
+      "email": "maria.garcia@ejemplo.com",
+      "phone": "+584141112233"
+    },
+    {
+      "idUser": 3,
+      "name": "Carlos",
+      "lastName": "Mendoza",
+      "email": "carlos.mendoza@ejemplo.com",
+      "phone": null
+    },
+    {
+      "idUser": 5,
+      "name": "Ana",
+      "lastName": "Rodríguez",
+      "email": "ana.rodriguez@ejemplo.com"
+    }
+  ]
+}

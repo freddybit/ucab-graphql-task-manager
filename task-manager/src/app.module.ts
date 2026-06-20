@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path/win32';
 import { ProjectsModule } from './projects/projects.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ProjectsModule } from './projects/projects.module';
       playground: true,
     }),
     ProjectsModule,
+    UsersModule,
   ],
   providers: [],
 })

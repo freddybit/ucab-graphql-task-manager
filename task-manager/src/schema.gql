@@ -7,10 +7,20 @@ input CreateProjectInput {
   projectName: String!
 }
 
+input CreateUserInput {
+  email: String!
+  lastName: String!
+  name: String!
+  phone: String
+}
+
 type Mutation {
   createProject(createProjectInput: CreateProjectInput!): Project!
+  createUser(createUserInput: CreateUserInput!): User!
   removeProject(id: Int!): Boolean!
+  removeUser(id: Int!): User!
   updateProject(updateProjectInput: UpdateProjectInput!): String!
+  updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 type Project {
@@ -22,10 +32,28 @@ type Project {
 type Query {
   project(id: Int!): Project!
   projects: [Project!]!
+  user(id: Int!): User!
+  users: [User!]!
 }
 
 input UpdateProjectInput {
   idProject: ID! = 0
   projectDescription: String! = ""
   projectName: String! = ""
+}
+
+input UpdateUserInput {
+  email: String!
+  idUser: ID!
+  lastName: String
+  name: String
+  phone: String
+}
+
+type User {
+  email: String!
+  idUser: ID!
+  lastName: String!
+  name: String!
+  phone: String
 }
