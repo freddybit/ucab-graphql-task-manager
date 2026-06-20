@@ -2,10 +2,30 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Hello {
-  message: String!
+input CreateProjectInput {
+  projectDescription: String!
+  projectName: String!
+}
+
+type Mutation {
+  createProject(createProjectInput: CreateProjectInput!): Project!
+  removeProject(id: Int!): Boolean!
+  updateProject(updateProjectInput: UpdateProjectInput!): String!
+}
+
+type Project {
+  idProject: ID!
+  projectDescription: String!
+  projectName: String!
 }
 
 type Query {
-  hello: Hello!
+  project(id: Int!): Project!
+  projects: [Project!]!
+}
+
+input UpdateProjectInput {
+  idProject: ID! = 0
+  projectDescription: String! = ""
+  projectName: String! = ""
 }

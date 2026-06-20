@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path/win32';
-import { HelloResolver } from './hello-world-module/hello.resolver';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [
@@ -12,8 +12,9 @@ import { HelloResolver } from './hello-world-module/hello.resolver';
       sortSchema: true,
       playground: true,
     }),
+    ProjectsModule,
   ],
-  providers: [HelloResolver],
+  providers: [],
 })
 
 export class AppModule {}
