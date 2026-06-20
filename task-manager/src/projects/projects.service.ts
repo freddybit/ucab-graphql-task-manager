@@ -18,15 +18,7 @@ export class ProjectsService implements OnModuleInit {
     'src/data/projects-data.json',
   );
 
-  private generateProjectId(): () => number {
-    let count = 0;
-    return function () {
-      count++;
-      return count;
-    };
-  }
-
-  private checkLenghtOfString(text: string, maxLenght: number): boolean {
+  private checkLengthOfString(text: string, maxLenght: number): boolean {
     return text.length <= maxLenght;
   }
 
@@ -74,11 +66,11 @@ export class ProjectsService implements OnModuleInit {
       throw new BadRequestException('Ya existe un proyecto con ese nombre.');
     }
 
-    if (!this.checkLenghtOfString(input.projectName, 50)) {
+    if (!this.checkLengthOfString(input.projectName, 50)) {
       throw new BadRequestException('El nombre del proyecto no puede exceder los 50 caracteres.');
     }
 
-    if (!this.checkLenghtOfString(input.projectDescription, 200)) {
+    if (!this.checkLengthOfString(input.projectDescription, 200)) {
       throw new BadRequestException('La descripción del proyecto no puede exceder los 200 caracteres.');
     }
 
@@ -107,19 +99,19 @@ export class ProjectsService implements OnModuleInit {
     return project;
   }
 
-  updateProject(input: UpdateProjectInput): void {
+  updateProject(input: UpdateProjectInput): Project {
     const json = this.readFile();
-    const projectIndex = json.projects.findIndex((pro) => pro.idProject === input.idProject);
+    const projectIndex = json.projects.findIndex((pro) => pro.idProject == input.idProject);
 
     if (projectIndex === -1) {
       throw new NotFoundException('No se encontró un proyecto con el ID ' + input.idProject);
     }
 
-    if (input.projectName && !this.checkLenghtOfString(input.projectName, 50)) {
+    if (input.projectName && !this.checkLengthOfString(input.projectName, 50)) {
       throw new BadRequestException('El nombre del proyecto no puede exceder los 50 caracteres.');
     }
 
-    if (input.projectDescription && !this.checkLenghtOfString(input.projectDescription, 200)) {
+    if (input.projectDescription && !this.checkLengthOfString(input.projectDescription, 200)) {
       throw new BadRequestException('La descripción del proyecto no puede exceder los 200 caracteres.');
     }
 
@@ -130,9 +122,10 @@ export class ProjectsService implements OnModuleInit {
     };
 
     this.saveFile(json);
+    return json.projects[projectIndex];
   }
 
-  removeProjectById(id: number): void {
+  removeProjectById(id: number): Project {
     const json = this.readFile();
 
     if (!this.existProjectById(id)) {
@@ -140,7 +133,9 @@ export class ProjectsService implements OnModuleInit {
     }
 
     const projectIndex = json.projects.findIndex((pro) => pro.idProject === id);
-    json.projects.splice(projectIndex);
+    const removedProject = json.projects[projectIndex];
+    json.projects.splice(projectIndex, 1);
     this.saveFile(json);
+    return removedProject;
   }
 }
