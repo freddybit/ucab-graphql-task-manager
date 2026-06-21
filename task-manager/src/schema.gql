@@ -7,6 +7,15 @@ input CreateProjectInput {
   projectName: String!
 }
 
+input CreateTaskInput {
+  description: String
+  idProject: Int!
+  idUser: Int!
+  status: TaskStatus!
+  tags: [String!]
+  title: String!
+}
+
 input CreateUserInput {
   email: String!
   lastName: String!
@@ -14,12 +23,20 @@ input CreateUserInput {
   phone: String
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Mutation {
   createProject(createProjectInput: CreateProjectInput!): Project!
+  createTask(createTaskInput: CreateTaskInput!): Task!
   createUser(createUserInput: CreateUserInput!): User!
   removeProject(id: Int!): Project!
+  removeTask(id: Int!): Task!
   removeUser(id: Int!): User!
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
+  updateTask(updateTaskInput: UpdateTaskInput!): Task!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
@@ -32,14 +49,48 @@ type Project {
 type Query {
   project(id: Int!): Project!
   projects: [Project!]!
+  task(id: Int!): Task!
+  tasks: [Task!]!
   user(id: Int!): User!
   users: [User!]!
+}
+
+type Task {
+  createdDate: DateTime!
+  description: String!
+  idProject: Int!
+  idTask: ID!
+  idUser: Int!
+  project: Project!
+  status: TaskStatus!
+  tags: [String!]!
+  title: String!
+  user: User!
+}
+
+"""The status of a task"""
+enum TaskStatus {
+  BACKLOG
+  DONE
+  IN_PROGRESS
+  TO_DO
 }
 
 input UpdateProjectInput {
   idProject: ID!
   projectDescription: String!
   projectName: String!
+}
+
+input UpdateTaskInput {
+  createdDate: DateTime!
+  description: String!
+  idProject: Int!
+  idTask: ID!
+  idUser: Int!
+  status: TaskStatus!
+  tags: [String!]!
+  title: String!
 }
 
 input UpdateUserInput {

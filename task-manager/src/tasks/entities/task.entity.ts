@@ -1,9 +1,10 @@
 import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import { TaskStatus } from '../enums/task-status.enum';
+import { Project } from '../../projects/entities/project.entity';
+import { User } from '../../users/entities/user.entity';
 
 @ObjectType()
 export class Task {
-
   @Field(() => ID)
   idTask!: number;
 
@@ -28,4 +29,9 @@ export class Task {
   @Field(() => Int)
   idProject!: number;
 
+  @Field(() => User)
+  user?: User;
+
+  @Field(() => Project)
+  project?: Project;
 }
