@@ -4,5 +4,6 @@ import { ProjectsResolver } from './projects.resolver';
 
 @Module({
   providers: [ProjectsResolver, ProjectsService],
+  exports: [ProjectsService],
 })
 export class ProjectsModule {}
