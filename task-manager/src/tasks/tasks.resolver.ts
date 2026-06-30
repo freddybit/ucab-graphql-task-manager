@@ -32,11 +32,11 @@ export class TasksResolver {
   }
 
   @Mutation(() => Task)
-  updateTask(@Args('updateTaskInput') updateTaskInput: UpdateTaskInput) {
-    return this.tasksService.updateTask(updateTaskInput);
+  updateTask(@Args('id', { type: () => Int }) id: number, @Args('updateTaskInput') updateTaskInput: UpdateTaskInput) {
+    return this.tasksService.updateTask(id, updateTaskInput);
   }
 
-  @Mutation(() => Task)
+  @Mutation(() => Boolean)
   removeTask(@Args('id', { type: () => Int }) id: number) {
     return this.tasksService.removeTaskById(id);
   }

@@ -13,10 +13,7 @@ import { ProjectFile } from './interfaces/project-file.interface';
 @Injectable()
 export class ProjectsService implements OnModuleInit {
 
-  private readonly projectsFilePath = path.resolve(
-    process.cwd(),
-    'src/data/projects-data.json',
-  );
+  private readonly projectsFilePath = path.join(process.cwd(), 'data', 'projects-data.json');
 
   private checkLengthOfString(text: string, maxLenght: number): boolean {
     return text.length <= maxLenght;

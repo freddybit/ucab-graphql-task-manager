@@ -9,7 +9,7 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UsersService implements OnModuleInit {
 
-  private readonly usersFilePath = path.resolve(process.cwd(), 'src/data/users-data.json');
+  private readonly usersFilePath = path.join(process.cwd(), 'data', 'users-data.json');
 
   private checkLenghtOfString(text: string, maxLenght: number): boolean {
     return text.length <= maxLenght;

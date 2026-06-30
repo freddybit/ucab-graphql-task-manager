@@ -33,10 +33,10 @@ type Mutation {
   createTask(createTaskInput: CreateTaskInput!): Task!
   createUser(createUserInput: CreateUserInput!): User!
   removeProject(id: Int!): Project!
-  removeTask(id: Int!): Task!
+  removeTask(id: Int!): Boolean!
   removeUser(id: Int!): User!
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
-  updateTask(updateTaskInput: UpdateTaskInput!): Task!
+  updateTask(id: Int!, updateTaskInput: UpdateTaskInput!): Task!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
