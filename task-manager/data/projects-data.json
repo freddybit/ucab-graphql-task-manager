@@ -1,5 +1,5 @@
 {
-  "lastId": 4,
+  "lastId": 5,
   "projects": [
     {
       "idProject": 0,
@@ -15,6 +15,11 @@
       "idProject": 3,
       "projectName": "Taller de Topicos #3",
       "projectDescription": "Implementar un sistema de gestión de tareas para proyectos de desarrollo de software."
+    },
+    {
+      "idProject": 4,
+      "projectName": "CodeStorm Tracker",
+      "projectDescription": "Es una plataforma diseñada para organizar y hacer seguimiento a mini-proyectos de software y desafíos técnicos desarrollados por equipos de estudiantes."
     }
   ]
 }

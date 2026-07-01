@@ -1,63 +1,65 @@
 import { Injectable, OnModuleInit, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
-import * as fs from 'fs';
-import * as path from 'path';
 import { Project } from './entities/project.entity';
 import { ProjectFile } from './interfaces/project-file.interface';
+import { ProjectsRepository } from './projects.repository';
 
 /**
  * @author Freddy Fernández <fafernandez.24@est.ucab.edu.ve>
  * @description Service class for managing projects, including file operations for data persistence.
  */
 @Injectable()
-export class ProjectsService implements OnModuleInit {
+export class ProjectsService {
 
-  private readonly projectsFilePath = path.join(process.cwd(), 'data', 'projects-data.json');
+  private readonly projectRepository: ProjectsRepository;
 
+  /**
+   * @description Valida de forma interna si la longitud de una cadena de texto está dentro del límite permitido.
+   * @private
+   * @param {string} text - El texto que se va a evaluar.
+   * @param {number} maxLenght - El número máximo de caracteres permitidos.
+   * @returns {boolean} True si el texto cumple con el límite, de lo contrario false.
+   */
+  constructor(projectRepository: ProjectsRepository) {
+    this.projectRepository = projectRepository;
+  }
+
+  /**
+   * @description Valida de forma interna si la longitud de una cadena de texto está dentro del límite permitido.
+   * @private
+   * @param {string} text - El texto que se va a evaluar.
+   * @param {number} maxLenght - El número máximo de caracteres permitidos.
+   * @returns {boolean} True si el texto cumple con el límite, de lo contrario false.
+   */
   private checkLengthOfString(text: string, maxLenght: number): boolean {
     return text.length <= maxLenght;
   }
 
-  private readFile(): ProjectFile {
-    const fileContent = fs.readFileSync(this.projectsFilePath, 'utf-8');
-    return JSON.parse(fileContent) as ProjectFile;
-  }
-
-  private saveFile(data: ProjectFile): void {
-    fs.writeFileSync(
-      this.projectsFilePath,
-      JSON.stringify(data, null, 2),
-      'utf-8',
-    );
-  }
-
-  onModuleInit() {
-    const directory = path.dirname(this.projectsFilePath);
-
-    if (!fs.existsSync(directory)) {
-      fs.mkdirSync(directory, { recursive: true });
-    }
-
-    if (!fs.existsSync(this.projectsFilePath)) {
-      const startStructure: ProjectFile = { lastId: 0, projects: [] };
-      this.saveFile(startStructure);
-    }
-  }
-
+  /**
+   * @description Comprueba a través del repositorio si ya existe un proyecto registrado con un nombre específico.
+   * @param {string} projectName - El nombre del proyecto a verificar.
+   * @returns {boolean} True si el nombre ya está registrado, de lo contrario false.
+   */
   existProjectByName(projectName: string): boolean {
-    const json = this.readFile();
-    return json.projects.some((pro) => pro.projectName === projectName);
+    return this.projectRepository.existProjectByName(projectName);
   }
 
+  /**
+   * @description Comprueba a través del repositorio si ya existe un proyecto registrado con un ID específico.
+   * @param {number} id - El ID del proyecto a verificar.
+   * @returns {boolean} True si el ID ya está registrado, de lo contrario false.
+   */
   existProjectById(id: number): boolean {
-    const json = this.readFile();
-    return json.projects.some((pro) => pro.idProject === id);
+    return this.projectRepository.existProjectById(id);
   }
 
-
+  /**
+   * @description Crea un nuevo proyecto con los datos proporcionados.
+   * @param {CreateProjectInput} input - Los datos del proyecto a crear.
+   * @returns {Project} El proyecto creado.
+   */
   createProject(input: CreateProjectInput): Project {
-    const json = this.readFile();
 
     if (this.existProjectByName(input.projectName)) {
       throw new BadRequestException('Ya existe un proyecto con ese nombre.');
@@ -71,38 +73,37 @@ export class ProjectsService implements OnModuleInit {
       throw new BadRequestException('La descripción del proyecto no puede exceder los 200 caracteres.');
     }
 
-    const newProject: Project = {
-      idProject: json.lastId,
-      projectName: input.projectName,
-      projectDescription: input.projectDescription,
-    };
-    
-    json.lastId++;
-    json.projects.push(newProject);
-    this.saveFile(json);
-
-    return newProject;
+    return this.projectRepository.createProject(input);   
   }
 
+  /**
+   * @description Obtiene una lista con todos los proyectos registrados.
+   * @returns {Project[]} Un array con todos los proyectos.
+   */
   findAllProjects(): Project[] {
-    const json = this.readFile();
-    return json.projects;
+    return this.projectRepository.getAllProjects();
   }
 
+  /**
+   * @description Busca un proyecto por su ID.
+   * @param {number} id - El ID del proyecto a buscar.
+   * @returns {Project} El proyecto encontrado.
+   */
   findProjectById(id: number): Project {
-    const json = this.readFile();
-    const project = json.projects.find((pro) => pro.idProject === id);
-    if (!project) throw new NotFoundException('No se encontró un proyecto con el ID ' + id);
+    const project = this.projectRepository.getProjectById(id);
+    if (!project) 
+      throw new NotFoundException('No se encontró un proyecto con el ID ' + id);
+
     return project;
   }
 
-  updateProject(input: UpdateProjectInput): Project {
-    const json = this.readFile();
-    const projectIndex = json.projects.findIndex((pro) => pro.idProject == input.idProject);
-
-    if (projectIndex === -1) {
-      throw new NotFoundException('No se encontró un proyecto con el ID ' + input.idProject);
-    }
+  /**
+   * @description Actualiza un proyecto existente con los datos proporcionados.
+   * @param {number} id - El ID del proyecto a actualizar.
+   * @param {UpdateProjectInput} input - Los datos actualizados del proyecto.
+   * @returns {Project} El proyecto actualizado.
+   */
+  updateProject(id: number, input: UpdateProjectInput): Project {
 
     if (input.projectName && !this.checkLengthOfString(input.projectName, 50)) {
       throw new BadRequestException('El nombre del proyecto no puede exceder los 50 caracteres.');
@@ -112,27 +113,24 @@ export class ProjectsService implements OnModuleInit {
       throw new BadRequestException('La descripción del proyecto no puede exceder los 200 caracteres.');
     }
 
-    json.projects[projectIndex] = {
-      ...json.projects[projectIndex], 
-      ...input, 
-      idProject: json.projects[projectIndex].idProject,
-    };
-
-    this.saveFile(json);
-    return json.projects[projectIndex];
-  }
-
-  removeProjectById(id: number): Project {
-    const json = this.readFile();
-
-    if (!this.existProjectById(id)) {
+    const project = this.projectRepository.getProjectById(id);
+    if (!project) {
       throw new NotFoundException('No se encontró un proyecto con el ID ' + id);
     }
 
-    const projectIndex = json.projects.findIndex((pro) => pro.idProject === id);
-    const removedProject = json.projects[projectIndex];
-    json.projects.splice(projectIndex, 1);
-    this.saveFile(json);
-    return removedProject;
+    return this.projectRepository.updateProject(id, input)!;
+  }
+
+  /**
+   * @description Elimina un proyecto por su ID.
+   * @param {number} id - El ID del proyecto a eliminar.
+   * @returns {boolean} True si el proyecto fue eliminado, de lo contrario false.
+   */
+  removeProjectById(id: number): boolean {
+
+    if (!this.existProjectById(id))
+      throw new NotFoundException('No se encontró un proyecto con el ID ' + id);
+
+    return this.projectRepository.deleteProject(id);
   }
 }
