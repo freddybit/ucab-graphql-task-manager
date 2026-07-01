@@ -9,11 +9,17 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  logger.log(`--------------------------------------------------------------------------`);
+  logger.log(
+    `--------------------------------------------------------------------------`,
+  );
   logger.log(`🚀 APLICACIÓN INICIALIZADA CON ÉXITO`);
   logger.log(`🟢 Entorno activo: ${process.env.NODE_ENV || 'development'}`);
   logger.log(`🔊 Servidor corriendo en: http://localhost:${port}`);
-  logger.log(`📊 GraphQL Playground disponible en: http://localhost:${port}/graphql`);
-  logger.log(`--------------------------------------------------------------------------`); 
+  logger.log(
+    `📊 GraphQL Playground disponible en: http://localhost:${port}/graphql`,
+  );
+  logger.log(
+    `--------------------------------------------------------------------------`,
+  );
 }
 bootstrap();

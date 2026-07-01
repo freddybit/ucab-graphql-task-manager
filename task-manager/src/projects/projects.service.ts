@@ -1,4 +1,9 @@
-import { Injectable, OnModuleInit, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Project } from './entities/project.entity';
@@ -11,7 +16,6 @@ import { ProjectsRepository } from './projects.repository';
  */
 @Injectable()
 export class ProjectsService {
-
   private readonly projectRepository: ProjectsRepository;
 
   /**
@@ -60,20 +64,23 @@ export class ProjectsService {
    * @returns {Project} El proyecto creado.
    */
   createProject(input: CreateProjectInput): Project {
-
     if (this.existProjectByName(input.projectName)) {
       throw new BadRequestException('Ya existe un proyecto con ese nombre.');
     }
 
     if (!this.checkLengthOfString(input.projectName, 50)) {
-      throw new BadRequestException('El nombre del proyecto no puede exceder los 50 caracteres.');
+      throw new BadRequestException(
+        'El nombre del proyecto no puede exceder los 50 caracteres.',
+      );
     }
 
     if (!this.checkLengthOfString(input.projectDescription, 200)) {
-      throw new BadRequestException('La descripción del proyecto no puede exceder los 200 caracteres.');
+      throw new BadRequestException(
+        'La descripción del proyecto no puede exceder los 200 caracteres.',
+      );
     }
 
-    return this.projectRepository.createProject(input);   
+    return this.projectRepository.createProject(input);
   }
 
   /**
@@ -91,7 +98,7 @@ export class ProjectsService {
    */
   findProjectById(id: number): Project {
     const project = this.projectRepository.getProjectById(id);
-    if (!project) 
+    if (!project)
       throw new NotFoundException('No se encontró un proyecto con el ID ' + id);
 
     return project;
@@ -104,13 +111,19 @@ export class ProjectsService {
    * @returns {Project} El proyecto actualizado.
    */
   updateProject(id: number, input: UpdateProjectInput): Project {
-
     if (input.projectName && !this.checkLengthOfString(input.projectName, 50)) {
-      throw new BadRequestException('El nombre del proyecto no puede exceder los 50 caracteres.');
+      throw new BadRequestException(
+        'El nombre del proyecto no puede exceder los 50 caracteres.',
+      );
     }
 
-    if (input.projectDescription && !this.checkLengthOfString(input.projectDescription, 200)) {
-      throw new BadRequestException('La descripción del proyecto no puede exceder los 200 caracteres.');
+    if (
+      input.projectDescription &&
+      !this.checkLengthOfString(input.projectDescription, 200)
+    ) {
+      throw new BadRequestException(
+        'La descripción del proyecto no puede exceder los 200 caracteres.',
+      );
     }
 
     const project = this.projectRepository.getProjectById(id);
@@ -127,7 +140,6 @@ export class ProjectsService {
    * @returns {boolean} True si el proyecto fue eliminado, de lo contrario false.
    */
   removeProjectById(id: number): boolean {
-
     if (!this.existProjectById(id))
       throw new NotFoundException('No se encontró un proyecto con el ID ' + id);
 

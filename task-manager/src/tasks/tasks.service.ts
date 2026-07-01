@@ -1,4 +1,9 @@
-import { Injectable, OnModuleInit, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
 import { Task } from './entities/task.entity';
@@ -9,12 +14,15 @@ import { TasksRepository } from './tasks.repository';
 
 @Injectable()
 export class TasksService {
+  private readonly usersService: UsersService;
+  private readonly projectsService: ProjectsService;
+  private readonly tasksRepository: TasksRepository;
 
-    private readonly usersService: UsersService;
-    private readonly projectsService: ProjectsService;
-    private readonly tasksRepository: TasksRepository;
-
-  constructor(usersService: UsersService, projectsService: ProjectsService, tasksRepository: TasksRepository) {
+  constructor(
+    usersService: UsersService,
+    projectsService: ProjectsService,
+    tasksRepository: TasksRepository,
+  ) {
     this.usersService = usersService;
     this.projectsService = projectsService;
     this.tasksRepository = tasksRepository;
@@ -29,7 +37,6 @@ export class TasksService {
   }
 
   createTask(input: CreateTaskInput): Task {
-
     if (!this.usersService.existUserById(input.idUser)) {
       throw new BadRequestException(
         'No se encontró un usuario con el ID: ' + input.idUser,
@@ -63,7 +70,6 @@ export class TasksService {
   }
 
   findTaskById(id: number): Task {
-
     if (!this.existTaskById(id))
       throw new NotFoundException('No se encontró una tarea con el ID ' + id);
 
@@ -71,18 +77,23 @@ export class TasksService {
   }
 
   updateTask(id: number, input: UpdateTaskInput): Task {
-
-    if (input.idProject !== null && !this.projectsService.existProjectById(input.idProject))
-      throw new NotFoundException('No se encontró ningún proyecto con el ID: ' + input.idProject);
+    if (
+      input.idProject !== null &&
+      !this.projectsService.existProjectById(input.idProject)
+    )
+      throw new NotFoundException(
+        'No se encontró ningún proyecto con el ID: ' + input.idProject,
+      );
 
     if (input.idUser !== null && !this.usersService.existUserById(input.idUser))
-      throw new NotFoundException('No se encontró ningún usuario con el ID: ' + input.idUser);
+      throw new NotFoundException(
+        'No se encontró ningún usuario con el ID: ' + input.idUser,
+      );
 
     return this.tasksRepository.updateTask(id, input)!;
   }
 
   removeTaskById(id: number): boolean {
-
     if (!this.existTaskById(id)) {
       throw new NotFoundException('No se encontró una tarea con el ID: ' + id);
     }

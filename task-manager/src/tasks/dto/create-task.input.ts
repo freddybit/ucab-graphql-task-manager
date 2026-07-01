@@ -3,7 +3,6 @@ import { TaskStatus } from '../enums/task-status.enum';
 
 @InputType()
 export class CreateTaskInput {
-
   @Field(() => String)
   title!: string;
 

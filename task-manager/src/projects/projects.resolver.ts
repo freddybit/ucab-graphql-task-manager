@@ -6,7 +6,6 @@ import { UpdateProjectInput } from './dto/update-project.input';
 
 @Resolver(() => Project)
 export class ProjectsResolver {
-
   constructor(private readonly projectsService: ProjectsService) {}
 
   // Los query sirven para consultar datos
@@ -49,7 +48,10 @@ export class ProjectsResolver {
    * @returns {Project} El objeto de tipo Project actualizado.
    */
   @Mutation(() => Project)
-  updateProject(@Args('id', { type: () => Int }) id: number, @Args('updateProjectInput') input: UpdateProjectInput) {
+  updateProject(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('updateProjectInput') input: UpdateProjectInput,
+  ) {
     return this.projectsService.updateProject(id, input);
   }
 

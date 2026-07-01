@@ -20,6 +20,4 @@ import { TasksModule } from './tasks/tasks.module';
   ],
   providers: [],
 })
-
 export class AppModule {}
- 
